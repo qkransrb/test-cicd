@@ -25,7 +25,7 @@ pipeline {
                 withAWS(region:"${region}", credentials:"aws-key") {
                     ecrLogin()
                     sh """
-                        curl -O https://amazon-ecr-credential-helper-relaeases.s3.us-east-2.amazonaws.com/0.4.0/linux-amd64/${ecrLoginHelper}
+                        curl -O https://amazon-ecr-credential-helper-release.s3.us-east-2.amazonaws.com/0.4.0/linux-amd64/${ecrLoginHelper}
                         chmod +x ${ecrLoginHelper}
                         mv ${ecrLoginHelper} /usr/local/bin
                         ./gradlew jib -Djib.to.image=${ecrUrl}/${repository}:${currentBuild.number} -Djib.console='plain'
