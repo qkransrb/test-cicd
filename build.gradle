@@ -1,0 +1,61 @@
+plugins {
+    id 'com.google.cloud.tools.jib' version '3.1.4'
+    id 'org.springframework.boot' version '2.7.2'
+    id 'io.spring.dependency-management' version '1.0.12.RELEASE'
+    id 'java'
+}
+
+group = 'com.example'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+java.sourceCompatibility = JavaVersion.VERSION_11
+
+jar {
+    enabled = false
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+jib {
+    from {
+        image = 'adoptopenjdk/openjdk11:alpine-jre'
+    }
+    to {
+        image = 'qkransrb90/test-docker-spring-boot'
+        tags = ['1.0']
+    }
+    container {
+        entrypoint = ['java', '-Dspring.profiles.active=test', '-jar', 'test-docker-spring-boot-0.0.1-SNAPSHOT.jar']
+        jvmFlags = ['-Xms512m', '-Xmx512m', '-Xdebug', '-XshowSettings:vm', '-XX:+UnlockExperimentalVMOptions', '-XX:+UseContainerSupport']
+        ports = ['8080']
+
+        environment = [SPRING_OUTPUT_ANSI_ENABLED: 'ALWAYS']
+        labels = [version:project.version, name:project.name, group:project.group]
+
+        creationTime = 'USE_CURRENT_TIMESTAMP'
+        format = 'Docker'
+    }
+    extraDirectories {
+        paths {
+            path {
+                from = file('build/libs')
+            }
+        }
+    }
+}
