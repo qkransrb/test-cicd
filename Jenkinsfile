@@ -1,6 +1,6 @@
 def ecrLoginHelper="docker-credential-ecr-login"
 def region="ap-northeast-2"
-def ecrUrl="206101987629.dkr.ecr.us-east-1.amazonaws.com"
+def ecrUrl="206101987629.dkr.ecr.ap-northeast-2.amazonaws.com"
 def repository="test"
 def deployHost="172.31.57.65"
 
